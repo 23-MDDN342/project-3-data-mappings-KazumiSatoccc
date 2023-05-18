@@ -50,16 +50,39 @@ function Face() {
   this.draw = function(positions) {
     console.log()
     // head
-    ellipseMode(CENTER);
-    stroke(stroke_color);
-    fill(this.mainColour);
-    ellipse(segment_average(positions.chin)[0], 0, 3, 4);
-    noStroke();
+    // ellipseMode(CENTER);
+    // stroke(stroke_color);
+    // fill(this.mainColour);
+    // ellipse(segment_average(positions.chin)[0], 0, 3, 4);
+    // noStroke();
+    rectMode(CENTER);
+    rect(segment_average(positions.chin)[0],0,3,4);
 
 
     // mouth
-    fill(this.detailColour);
-    ellipse(segment_average(positions.bottom_lip)[0], segment_average(positions.bottom_lip)[1], 1.36, 0.25 * this.mouth_size);
+    // fill(this.detailColour);
+    // ellipse(segment_average(positions.bottom_lip)[0], segment_average(positions.bottom_lip)[1], 1.36, 0.25 * this.mouth_size);
+
+    push();
+    translate(0,0.6);
+    strokeWeight(0.5)
+    scale(0.2);
+    noFill();
+    beginShape();
+    curveVertex(-2,0.5);
+    curveVertex(-2,0.5);
+    curveVertex(-3,0);
+    curveVertex(-4,1);
+    curveVertex(-3,2);
+    curveVertex(-1,1.5);
+    curveVertex(2.5,0.5);
+    curveVertex(3.5,2);
+    curveVertex(2,3);
+    curveVertex(0,2.5);
+    curveVertex(-1,1.5);
+    curveVertex(-1,1.5);
+    endShape();
+    pop();
 
     // eyebrows
     fill( this.eyebrowColour);
