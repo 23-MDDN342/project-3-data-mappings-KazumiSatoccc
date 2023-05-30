@@ -63,6 +63,7 @@ function Face() {
     // fill(this.detailColour);
     // ellipse(segment_average(positions.bottom_lip)[0], segment_average(positions.bottom_lip)[1], 1.36, 0.25 * this.mouth_size);
 
+    //mouth code
     push();
     translate(0,0.6);
     strokeWeight(0.5)
