@@ -56,7 +56,7 @@ function Face() {
     // ellipse(segment_average(positions.chin)[0], 0, 3, 4);
     // noStroke();
     rectMode(CENTER);
-    rect(segment_average(positions.chin)[0],0,3,4);
+    rect(segment_average(positions.chin)[0],0,4,4);
 
 
     // mouth
@@ -64,7 +64,7 @@ function Face() {
     // ellipse(segment_average(positions.bottom_lip)[0], segment_average(positions.bottom_lip)[1], 1.36, 0.25 * this.mouth_size);
 
     //mouth code
-    push();
+    push();  //@ flippe depends where its facing
     translate(0,0.6);
     strokeWeight(0.5)
     scale(0.2);
@@ -83,24 +83,46 @@ function Face() {
     curveVertex(-1,1.5);
     curveVertex(-1,1.5);
     endShape();
+
+    beginShape();
+    curveVertex(-2,0.5);
+    curveVertex(-2,0.5);
+    curveVertex(-3,0);
+    curveVertex(-4,1);
+    curveVertex(-3,2);
+    curveVertex(-1,1.5);
+    curveVertex(2.5,0.5);
+    curveVertex(3.5,2);
+    curveVertex(2,3);
+    curveVertex(0,2.5);
+    curveVertex(-1,1.5);
+    curveVertex(-1,1.5);
+    endShape();
     pop();
 
     // eyebrows
-    fill( this.eyebrowColour);
-    stroke( this.eyebrowColour);
-    strokeWeight(0.08);
-    this.draw_segment(positions.left_eyebrow);
-    this.draw_segment(positions.right_eyebrow);
+    // fill( this.eyebrowColour);
+    // stroke( this.eyebrowColour);
+    // strokeWeight(0.08);
+    // this.draw_segment(positions.left_eyebrow);
+    // this.draw_segment(positions.right_eyebrow);
 
     // draw the chin segment using points
-    fill(this.chinColour);
-    stroke(this.chinColour);
-    this.draw_segment(positions.chin);
+    // fill(this.chinColour);
+    // stroke(this.chinColour);
+    // this.draw_segment(positions.chin);
 
-    fill(100, 0, 100);
-    stroke(100, 0, 100);
-    this.draw_segment(positions.nose_bridge);
-    this.draw_segment(positions.nose_tip);
+    //nose
+    // fill(100, 0, 100);
+    // stroke(100, 0, 100);
+    // this.draw_segment(positions.nose_bridge);
+    // this.draw_segment(positions.nose_tip);
+
+    let nosePosi = segment_average(positions.nose_tip);
+
+    noFill();
+    stroke(0.3);
+    ellipse(nosePosi[0],nosePosi[1]-0.2,0.3,0.3);
 
     strokeWeight(0.03);
 
@@ -114,29 +136,44 @@ function Face() {
 
     // eyes
     noStroke();
-    let curEyeShift = 0.04 * this.eye_shift;
+    //let curEyeShift = 0.04 * this.eye_shift;
     if(this.num_eyes == 2) {
-      fill(this.detailColour);
-      ellipse(left_eye_pos[0], left_eye_pos[1], 0.5, 0.33);
-      ellipse(right_eye_pos[0], right_eye_pos[1], 0.5, 0.33);
-
-      // fill(this.mainColour);
-      // ellipse(left_eye_pos[0] + curEyeShift, left_eye_pos[1], 0.18);
-      // ellipse(right_eye_pos[0] + curEyeShift, right_eye_pos[1], 0.18);
+      let eyeLine = 120 //between 1 ~ 180
+  
+      noFill();
+      strokeWeight(0.05)
+      stroke(20);
+      arc(left_eye_pos[0], left_eye_pos[1],0.5,0.7,90-eyeLine,90+eyeLine,CHORD)
+      arc(left_eye_pos[0], left_eye_pos[1],0.5,0.7,90+eyeLine,90-eyeLine,CHORD)
+      arc(right_eye_pos[0], right_eye_pos[1],0.5,0.7,90-eyeLine,90+eyeLine,CHORD)
+      arc(right_eye_pos[0], right_eye_pos[1],0.5,0.7,90+eyeLine,90-eyeLine,CHORD)
+  
+      fill(20);
+      ellipse(left_eye_pos[0], left_eye_pos[1]+0.19,0.12);
+      ellipse(right_eye_pos[0], right_eye_pos[1]+0.19,0.12);
     }
     else {
-      let eyePosX = (left_eye_pos[0] + right_eye_pos[0]) / 2;
-      let eyePosY = (left_eye_pos[1] + right_eye_pos[1]) / 2;
+      // let eyePosX = (left_eye_pos[0] + right_eye_pos[0]) / 2;
+      // let eyePosY = (left_eye_pos[1] + right_eye_pos[1]) / 2;
 
-      fill(this.detailColour);
-      ellipse(eyePosX, eyePosY, 0.45, 0.27);
+      // fill(this.detailColour);
+      // ellipse(eyePosX, eyePosY, 0.45, 0.27);
 
-      fill(this.mainColour);
-      ellipse(eyePosX - 0.1 + curEyeShift, eyePosY, 0.18);
+      // fill(this.mainColour);
+      // ellipse(eyePosX - 0.1 + curEyeShift, eyePosY, 0.18);
+
+      noFill();
+      stroke(20);
+      ellipse(left_eye_pos[0], left_eye_pos[1],0.5,0.7)
+      ellipse(right_eye_pos[0], right_eye_pos[1],0.5,0.7)
+
+      fill(20);
+      ellipse(left_eye_pos[0], left_eye_pos[1]+0.1,0.12);
+      ellipse(right_eye_pos[0], right_eye_pos[1]+0.1,0.12);
     }
-   // fill(0)
-   //ellipse(0,0, 0.5,0.5) center point
-   //rect(-2,-2,4.5,4) sizing debug 
+  //  fill(0)
+  //  ellipse(0,0, 0.5,0.5) //center point
+  //  rect(-2,-2,4.5,4) //sizing debug 
   }
 
   // example of a function *inside* the face object.
