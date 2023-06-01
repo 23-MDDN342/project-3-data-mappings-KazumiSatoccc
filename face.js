@@ -68,8 +68,8 @@ function Face() {
     noFill();
     beginShape();
     for (let i = 0; i < dotNum; i++) {
-      vertex(-2, -2 + spacing*i + 0.3);
-      vertex(-2 + spacing + spacing*i, -2);
+      curveVertex(-2, -2 + spacing*i + 0.3);
+      curveVertex(-2 + spacing + spacing*i, -2);
     
       strokeWeight(0.1);
       point(-2, -2 + spacing*i + 0.3);
@@ -81,8 +81,8 @@ function Face() {
   
     beginShape();
     for (let i = 0; i < dotNum; i++) {
-      vertex(2, -2 + spacing*i + 0.3);
-      vertex(-2 + spacing + spacing*i, 2);
+      curveVertex(2, -2 + spacing*i + 0.3);
+      curveVertex(-2 + spacing + spacing*i, 2);
     }
     endShape();
     pop();
@@ -154,10 +154,10 @@ function Face() {
 
     strokeWeight(0.03);
 
-    fill(this.lipColour);
-    stroke(this.lipColour);
-    this.draw_segment(positions.top_lip);
-    this.draw_segment(positions.bottom_lip);
+    // fill(this.lipColour);
+    // stroke(this.lipColour);
+    // this.draw_segment(positions.top_lip);
+    // this.draw_segment(positions.bottom_lip);
 
     let left_eye_pos = segment_average(positions.left_eye);
     let right_eye_pos = segment_average(positions.right_eye);
