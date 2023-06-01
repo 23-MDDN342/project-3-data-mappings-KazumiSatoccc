@@ -56,8 +56,36 @@ function Face() {
     // ellipse(segment_average(positions.chin)[0], 0, 3, 4);
     // noStroke();
     rectMode(CENTER);
-    rect(segment_average(positions.chin)[0],0,4,4);
+    //rect(segment_average(positions.chin)[0],0,4,4);
 
+    let dotNum = 10
+    let spacing = 4/dotNum //0.4
+    
+    push();
+    translate(segment_average(positions.chin)[0],0);
+    strokeWeight(0.05);
+    stroke(50, 168, 78);
+    noFill();
+    beginShape();
+    for (let i = 0; i < dotNum; i++) {
+      vertex(-2, -2 + spacing*i + 0.3);
+      vertex(-2 + spacing + spacing*i, -2);
+    
+      strokeWeight(0.1);
+      point(-2, -2 + spacing*i + 0.3);
+      point(-2 + spacing + spacing*i, -2);
+    }
+    endShape();
+  
+    line(2,-2,-1.6,2)
+  
+    beginShape();
+    for (let i = 0; i < dotNum; i++) {
+      vertex(2, -2 + spacing*i + 0.3);
+      vertex(-2 + spacing + spacing*i, 2);
+    }
+    endShape();
+    pop();
 
     // mouth
     // fill(this.detailColour);
