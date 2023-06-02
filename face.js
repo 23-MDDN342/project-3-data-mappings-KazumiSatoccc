@@ -7,7 +7,7 @@
 var DEBUG_MODE = false;
 
 // this can be used to set the number of sliders to show
-var NUM_SLIDERS = 4;
+var NUM_SLIDERS = 5;
 
 function segment_average(segment) {
   let sum_x = 0;
@@ -22,8 +22,8 @@ function segment_average(segment) {
 
 // This where you define your own face object
 function Face() {
-  const redColour = [255,70,70];
-  const blueColour = [70,70,255];
+  const redColour = [255,100,100];
+  const blueColour = [100,100,255];
   const yellowColour = [200,255,70];
 
   this.eye_type = 1;    // type of eye 1 or 2
@@ -250,6 +250,10 @@ function Face() {
 
   /* set internal properties based on list numbers 0-100 */
   this.setProperties = function(settings) {
+    // this.num_eyes = int(map(settings[0], 0, 100, 1, 2));
+    // this.rotateNose = map(settings[1], 0, 100, -90, 270);
+    // this.nose_value = map(settings[2], 0, 100, 0, 4);
+
     this.background_colour = int(map(settings[0], 0, 100, 1, 3));
     this.eye_type = int(map(settings[1], 0, 100, 1, 2));
     this.mouth_open = int(map(settings[2], 0, 100, 1, 2));
@@ -258,7 +262,11 @@ function Face() {
 
   /* get internal properties as list of numbers 0-100 */
   this.getProperties = function() {
-    let settings = new Array(4);
+    let settings = new Array(3);
+    // settings[0] = map(this.num_eyes, 1, 2, 0, 100);
+    // settings[1] = map(this.rotateNose, 270, -90, 0, 100);
+    // settings[2] = map(this.nose_value, 0, 10, 0, 100);
+
     settings[0] = map(this.background_colour, 1, 3, 0, 100);
     settings[1] = map(this.eye_type, 1, 2, 0, 100);
     settings[2] = map(this.mouth_open, 1, 2, 0, 100);

@@ -2,6 +2,4 @@
 [![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-718a45dd9cf7e7f842a935f5ebbe5719a5e09af4491e668f4dbf3b35d5cca122.svg)](https://classroom.github.com/online_ide?assignment_repo_id=11157673&assignment_repo_type=AssignmentRepo)
 ## 2023 MDDN342 Assignment 3: Data Mappings
 
-REPLACE ALL TEXT IN THIS FILE
-
-This README should be used to document your design.
+For this project I wanted to create something creepy in the beggining. The key point of this project is that we are asked to draw a face on the face in image and that reminds me photos usually seen in horror movie that faces on it are covered and filled with paint. However, when I added face parts on the paint it start looking like a cute character so I changed the plan and decided to go charactaristic/cartoonish face by useing curvy shapes. The attribues used is the zigzag/spiral background, 3 different colored background, half closed/full opend eyes, open/closed mouth.
