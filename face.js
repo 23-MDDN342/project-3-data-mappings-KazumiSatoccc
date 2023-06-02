@@ -4,7 +4,7 @@
  */  
 
 // remove this or set to false to enable full program (load will be slower)
-var DEBUG_MODE = true;
+var DEBUG_MODE = false;
 
 // this can be used to set the number of sliders to show
 var NUM_SLIDERS = 3;
@@ -58,32 +58,32 @@ function Face() {
     rectMode(CENTER);
     //rect(segment_average(positions.chin)[0],0,4,4);
 
-    let dotNum = 10
-    let spacing = 4/dotNum //0.4
+    //bakcgorund
+    let dotNum = 6 //number of edges on one side of rextangle
+    let spacing = 4/dotNum //spacing for vertex lines
     
     push();
     translate(segment_average(positions.chin)[0],0);
-    strokeWeight(0.05);
+    strokeWeight(0.25);
     stroke(50, 168, 78);
     noFill();
     beginShape();
+    curveVertex(-2, -2 + spacing + 0.3)
     for (let i = 0; i < dotNum; i++) {
+    
       curveVertex(-2, -2 + spacing*i + 0.3);
       curveVertex(-2 + spacing + spacing*i, -2);
-    
-      strokeWeight(0.1);
-      point(-2, -2 + spacing*i + 0.3);
-      point(-2 + spacing + spacing*i, -2);
     }
+    curveVertex(-2 + spacing + spacing, -2);
     endShape();
   
-    line(2,-2,-1.6,2)
-  
     beginShape();
+    curveVertex(2, -2 + spacing + 0.3);
     for (let i = 0; i < dotNum; i++) {
       curveVertex(2, -2 + spacing*i + 0.3);
       curveVertex(-2 + spacing + spacing*i, 2);
     }
+    curveVertex(-2 + spacing + spacing, 2);
     endShape();
     pop();
 
@@ -191,6 +191,7 @@ function Face() {
       // ellipse(eyePosX - 0.1 + curEyeShift, eyePosY, 0.18);
 
       noFill();
+      strokeWeight(0.05)
       stroke(20);
       ellipse(left_eye_pos[0], left_eye_pos[1],0.5,0.7)
       ellipse(right_eye_pos[0], right_eye_pos[1],0.5,0.7)
