@@ -176,6 +176,7 @@ function Face() {
     let REB4 = positions.right_eyebrow[4];
 
     noFill();
+    strokeWeight(0.08);
     beginShape();
     curveVertex(LEB0[0],LEB0[1]);
     curveVertex(LEB0[0],LEB0[1]);
@@ -204,8 +205,46 @@ function Face() {
     this.draw_segment(positions.nose_bridge);
     this.draw_segment(positions.nose_tip);
 
-    
+    let noseBegg = positions.nose_bridge[0];
+    let asdf = positions.nose_bridge[2];
+    let noseTop = positions.nose_bridge[3];
+    let qwerR = positions.nose_tip[2];
+    let noseEndR = positions.nose_tip[4];
+    let noseEndL = positions.nose_tip[0];
+    //let noseEndasd = positions.nose_tip[3];
 
+    if (qwerR[0] < noseTop[0]) {
+      noFill();
+      stroke(0);
+      beginShape();
+      curveVertex(noseBegg[0],noseBegg[1]);
+      curveVertex(noseBegg[0],noseBegg[1]);
+      curveVertex(asdf[0],asdf[1]);
+      curveVertex(noseTop[0],noseTop[1]);
+      curveVertex(qwerR[0],qwerR[1]);
+      curveVertex(qwerR[0]-0.3,qwerR[1]-0.2);
+      curveVertex(noseEndL[0]+0.2,noseEndL[1] - 0.4);
+      curveVertex(noseEndL[0]+0.2,noseEndL[1] - 0.4);
+      endShape();
+    } else {
+      noFill();
+    stroke(0);
+    beginShape();
+    curveVertex(noseBegg[0],noseBegg[1]);
+    curveVertex(noseBegg[0],noseBegg[1]);
+    curveVertex(asdf[0],asdf[1]);
+    curveVertex(noseTop[0],noseTop[1]);
+    curveVertex(qwerR[0],qwerR[1]);
+    curveVertex(qwerR[0]+0.3,qwerR[1]-0.2);
+    curveVertex(noseEndR[0]-0.2,noseEndR[1] - 0.4);
+    curveVertex(noseEndR[0]-0.2,noseEndR[1] - 0.4);
+    endShape();
+
+    }
+
+
+    // textSize(1);
+    // text(noseEndasd[0], 0,0)
 
     //let nosePosi = segment_average(positions.nose_tip);
 
