@@ -168,29 +168,44 @@ function Face() {
     // this.draw_segment(positions.left_eyebrow);
     // this.draw_segment(positions.right_eyebrow);
 
+    let LEB0 = positions.left_eyebrow[0];
+    let LEB2 = positions.left_eyebrow[2];
+    let LEB4 = positions.left_eyebrow[4];
+    let REB0 = positions.right_eyebrow[0];
+    let REB2 = positions.right_eyebrow[2];
+    let REB4 = positions.right_eyebrow[4];
+
+    noFill();
+    beginShape();
+    curveVertex(LEB0[0],LEB0[1]);
+    curveVertex(LEB0[0],LEB0[1]);
+    curveVertex(LEB2[0],LEB2[1]);
+    curveVertex(LEB4[0],LEB4[1]);
+    curveVertex(LEB4[0],LEB4[1]);
+    endShape();
+
+    beginShape();
+    curveVertex(REB0[0],REB0[1]);
+    curveVertex(REB0[0],REB0[1]);
+    curveVertex(REB2[0],REB2[1]);
+    curveVertex(REB4[0],REB4[1]);
+    curveVertex(REB4[0],REB4[1]);
+    endShape();
+    //line(positions.left_eyebrow,)
+
     // draw the chin segment using points
     // fill(this.chinColour);
     // stroke(this.chinColour);
     // this.draw_segment(positions.chin);
 
     //nose
-
-    let d = dist(segment_average(positions.nose_tip[0]), 0, segment_average(positions.nose_bridge[0]), 0);
-    let noseGap = 0.1 //distance that ditermines how nose will be drawn
-
-    if (d > noseGap) {
-      ellipse(segment_average(positions.nose_bridge)[0],segment_average(positions.nose_bridge)[1]-0.2,0.3,0.3);
-    } else if (d < -noseGap) {
-      ellipse(segment_average(positions.nose_tip)[0],segment_average(positions.nose_tip)[1]-0.2,0.3,0.3);
-      ellipse(segment_average(positions.nose_bridge)[0],segment_average(positions.nose_bridge)[1]-0.2,0.3,0.3);
-    } else {
-      ellipse(segment_average(positions.nose_tip)[0],segment_average(positions.nose_tip)[1]-0.2,0.3,0.3);
-    }
-
     fill(100, 0, 100);
     stroke(100, 0, 100);
     this.draw_segment(positions.nose_bridge);
     this.draw_segment(positions.nose_tip);
+
+    
+
 
     //let nosePosi = segment_average(positions.nose_tip);
 
