@@ -4,7 +4,7 @@
  */  
 
 // remove this or set to false to enable full program (load will be slower)
-var DEBUG_MODE = false;
+var DEBUG_MODE = true;
 
 // this can be used to set the number of sliders to show
 var NUM_SLIDERS = 3;
@@ -34,9 +34,15 @@ function Face() {
   // (your variables should be different!)
   this.detailColour = [204, 136, 17];
   this.mainColour = [51, 119, 153];
-  this.num_eyes = 2;    // can be either 1 (cyclops) or 2 (two eyes)
   this.eye_shift = -1;   // range is -10 to 10
-  this.mouth_size = 1;  // range is 0.5 to 8
+
+  const redColour = [255,70,70];
+  const blueColour = [70,70,255];
+  const yellowColour = [200,255,70];
+
+  this.eye_type = 1;    // type of eye 1 or 2
+  this.mouth_open = 1;  // mouth open when 1
+  this.background_colour = 1; // color of background
 
   this.chinColour = [153, 153, 51]
   this.lipColour = [136, 68, 68]
@@ -55,7 +61,7 @@ function Face() {
     // fill(this.mainColour);
     // ellipse(segment_average(positions.chin)[0], 0, 3, 4);
     // noStroke();
-    rectMode(CENTER);
+    //rectMode(CENTER);
     //rect(segment_average(positions.chin)[0],0,4,4);
 
     //bakcgorund
@@ -65,7 +71,13 @@ function Face() {
     push();
     translate(segment_average(positions.chin)[0],0);
     strokeWeight(0.25);
-    stroke(50, 168, 78);
+    if (this.background_colour == 1) { //colour changes
+      stroke(redColour);
+    } else if (this.background_colour == 2) {
+      stroke(blueColour);
+    } else if (this.background_colour == 3) {
+      stroke(yellowColour);
+    }
     noFill();
     beginShape();
     curveVertex(-2, -2 + spacing + 0.3)
@@ -89,12 +101,12 @@ function Face() {
 
     // mouth
     // fill(this.detailColour);
-    // ellipse(segment_average(positions.bottom_lip)[0], segment_average(positions.bottom_lip)[1], 1.36, 0.25 * this.mouth_size);
+    // ellipse(segment_average(positions.bottom_lip)[0], segment_average(positions.bottom_lip)[1], 1.36, 0.25 * this.mouth_open);
 
-    //mouth code
-    push();  //@ flippe depends where its facing
+    //mouth
+    push(); 
     translate(0,0.6);
-    strokeWeight(0.5)
+    strokeWeight(0.4)
     scale(0.2);
     noFill();
     beginShape();
@@ -103,30 +115,32 @@ function Face() {
     curveVertex(-3,0);
     curveVertex(-4,1);
     curveVertex(-3,2);
-    curveVertex(-1,1.5);
-    curveVertex(2.5,0.5);
-    curveVertex(3.5,2);
-    curveVertex(2,3);
-    curveVertex(0,2.5);
-    curveVertex(-1,1.5);
-    curveVertex(-1,1.5);
-    endShape();
-
-    beginShape();
-    curveVertex(-2,0.5);
-    curveVertex(-2,0.5);
-    curveVertex(-3,0);
-    curveVertex(-4,1);
-    curveVertex(-3,2);
-    curveVertex(-1,1.5);
-    curveVertex(2.5,0.5);
-    curveVertex(3.5,2);
-    curveVertex(2,3);
-    curveVertex(0,2.5);
-    curveVertex(-1,1.5);
-    curveVertex(-1,1.5);
+    curveVertex(-2,1.8);
+    curveVertex(0,1.5);
+    curveVertex(2,1.8);
+    curveVertex(3,2);
+    curveVertex(4,1);
+    curveVertex(3,0);
+    curveVertex(2,0.5);
+    curveVertex(2,0.5);
     endShape();
     pop();
+
+    if (this.mouth_open == 1) { //let mouse open when mouth_open is 1
+      push();
+      translate(0,0.6);
+      strokeWeight(0.4)
+      scale(0.2);
+      noFill();
+      beginShape();
+      curveVertex(-2,1.8);
+      curveVertex(-2,1.8);
+      curveVertex(0,3);
+      curveVertex(2,1.8);
+      curveVertex(2,1.8);
+      endShape();
+      pop();
+    }
 
     // eyebrows
     // fill( this.eyebrowColour);
@@ -148,7 +162,7 @@ function Face() {
 
     let nosePosi = segment_average(positions.nose_tip);
 
-    noFill();
+    fill(0);
     stroke(0.3);
     ellipse(nosePosi[0],nosePosi[1]-0.2,0.3,0.3);
 
@@ -165,15 +179,16 @@ function Face() {
     // eyes
     noStroke();
     //let curEyeShift = 0.04 * this.eye_shift;
-    if(this.num_eyes == 2) {
+    if(this.eye_type == 2) {
       let eyeLine = 120 //between 1 ~ 180
   
       noFill();
-      strokeWeight(0.05)
+      strokeWeight(0.08)
       stroke(20);
       arc(left_eye_pos[0], left_eye_pos[1],0.5,0.7,90-eyeLine,90+eyeLine,CHORD)
-      arc(left_eye_pos[0], left_eye_pos[1],0.5,0.7,90+eyeLine,90-eyeLine,CHORD)
       arc(right_eye_pos[0], right_eye_pos[1],0.5,0.7,90-eyeLine,90+eyeLine,CHORD)
+      fill(0);
+      arc(left_eye_pos[0], left_eye_pos[1],0.5,0.7,90+eyeLine,90-eyeLine,CHORD)
       arc(right_eye_pos[0], right_eye_pos[1],0.5,0.7,90+eyeLine,90-eyeLine,CHORD)
   
       fill(20);
@@ -191,7 +206,7 @@ function Face() {
       // ellipse(eyePosX - 0.1 + curEyeShift, eyePosY, 0.18);
 
       noFill();
-      strokeWeight(0.05)
+      strokeWeight(0.08)
       stroke(20);
       ellipse(left_eye_pos[0], left_eye_pos[1],0.5,0.7)
       ellipse(right_eye_pos[0], right_eye_pos[1],0.5,0.7)
@@ -227,17 +242,17 @@ function Face() {
 
   /* set internal properties based on list numbers 0-100 */
   this.setProperties = function(settings) {
-    this.num_eyes = int(map(settings[0], 0, 100, 1, 2));
-    this.eye_shift = map(settings[1], 0, 100, -2, 2);
-    this.mouth_size = map(settings[2], 0, 100, 0.5, 8);
+    this.background_colour = int(map(settings[0], 0, 100, 1, 3));
+    this.eye_type = int(map(settings[1], 0, 100, 1, 2));
+    this.mouth_open = int(map(settings[2], 0, 100, 1, 2));
   }
 
   /* get internal properties as list of numbers 0-100 */
   this.getProperties = function() {
     let settings = new Array(3);
-    settings[0] = map(this.num_eyes, 1, 2, 0, 100);
-    settings[1] = map(this.eye_shift, -2, 2, 0, 100);
-    settings[2] = map(this.mouth_size, 0.5, 8, 0, 100);
+    settings[0] = map(this.background_colour, 1, 3, 0, 100);
+    settings[1] = map(this.eye_type, 1, 2, 0, 100);
+    settings[2] = map(this.mouth_open, 1, 2, 0, 100);
     return settings;
   }
 }
