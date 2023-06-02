@@ -7,13 +7,10 @@
 var DEBUG_MODE = true;
 
 // this can be used to set the number of sliders to show
-var NUM_SLIDERS = 3;
+var NUM_SLIDERS = 4;
 
 // other variables can be in here too
 // here's some examples for colors used
-
-
-const stroke_color = [95, 52, 8];
 
 // example of a global function
 // given a segment, this returns the average point [x, y]
@@ -30,8 +27,6 @@ function segment_average(segment) {
 
 // This where you define your own face object
 function Face() {
-  // these are state variables for a face
-  // (your variables should be different!)
   this.detailColour = [204, 136, 17];
   this.mainColour = [51, 119, 153];
   this.eye_shift = -1;   // range is -10 to 10
@@ -43,10 +38,7 @@ function Face() {
   this.eye_type = 1;    // type of eye 1 or 2
   this.mouth_open = 1;  // mouth open when 1
   this.background_colour = 1; // color of background
-
-  this.chinColour = [153, 153, 51]
-  this.lipColour = [136, 68, 68]
-  this.eyebrowColour = [119, 85, 17]
+  this.background_shape = 1; // shape of background
 
   /*
    * Draw the face with position lists that include:
@@ -54,7 +46,7 @@ function Face() {
    *    bottom_lip, top_lip, nose_tip, nose_bridge, 
    */  
   this.draw = function(positions) {
-    console.log()
+    //console.log()
     // head
     // ellipseMode(CENTER);
     // stroke(stroke_color);
@@ -67,10 +59,12 @@ function Face() {
     //bakcgorund
     let dotNum = 6 //number of edges on one side of rextangle
     let spacing = 4/dotNum //spacing for vertex lines
+
+    let horizonSpa = 0.2
+    let vertiSpa = 0.4
+    
     
     push();
-    translate(segment_average(positions.chin)[0],0);
-    strokeWeight(0.25);
     if (this.background_colour == 1) { //colour changes
       stroke(redColour);
     } else if (this.background_colour == 2) {
@@ -78,25 +72,50 @@ function Face() {
     } else if (this.background_colour == 3) {
       stroke(yellowColour);
     }
-    noFill();
-    beginShape();
-    curveVertex(-2, -2 + spacing + 0.3)
-    for (let i = 0; i < dotNum; i++) {
+
+    if (this.background_shape = 1) {
+      push();
+      translate(segment_average(positions.chin)[0],0);
+      strokeWeight(0.25);
+      noFill();
+      beginShape();
+      curveVertex(-2, -2 + spacing + 0.3)
+      for (let i = 0; i < dotNum; i++) {
     
-      curveVertex(-2, -2 + spacing*i + 0.3);
-      curveVertex(-2 + spacing + spacing*i, -2);
-    }
-    curveVertex(-2 + spacing + spacing, -2);
-    endShape();
+        curveVertex(-2, -2 + spacing*i + 0.3);
+        curveVertex(-2 + spacing + spacing*i, -2);
+      }
+      curveVertex(-2 + spacing + spacing, -2);
+      endShape();
   
-    beginShape();
-    curveVertex(2, -2 + spacing + 0.3);
-    for (let i = 0; i < dotNum; i++) {
-      curveVertex(2, -2 + spacing*i + 0.3);
-      curveVertex(-2 + spacing + spacing*i, 2);
+      beginShape();
+      curveVertex(2, -2 + spacing + 0.3);
+      for (let i = 0; i < dotNum; i++) {
+        curveVertex(2, -2 + spacing*i + 0.3);
+        curveVertex(-2 + spacing + spacing*i, 2);
+      }
+      curveVertex(-2 + spacing + spacing, 2);
+      endShape();
+      pop();
+    } else {
+
+      push();
+      translate(segment_average(positions.chin)[0],0);
+      noFill();
+      strokeWeight(0.25);
+      beginShape();
+      curveVertex(0,2);
+      for (let i = 0; i < 10; i++) {
+        curveVertex(0,2-vertiSpa*i);
+        curveVertex(-0.4-horizonSpa*i,2-vertiSpa*i-vertiSpa);
+        curveVertex(0,1.2-vertiSpa*i);
+        curveVertex(0.4 +horizonSpa*i,2-vertiSpa*i-vertiSpa);
+        curveVertex(0,1.6-vertiSpa*i);
+      }
+      curveVertex(0,-0.8);
+      endShape();
+      pop();
     }
-    curveVertex(-2 + spacing + spacing, 2);
-    endShape();
     pop();
 
     // mouth
@@ -105,7 +124,7 @@ function Face() {
 
     //mouth
     push(); 
-    translate(0,0.6);
+    translate(segment_average(positions.top_lip)[0], segment_average(positions.top_lip)[1] - 0.3);
     strokeWeight(0.4)
     scale(0.2);
     noFill();
@@ -128,14 +147,14 @@ function Face() {
 
     if (this.mouth_open == 1) { //let mouse open when mouth_open is 1
       push();
-      translate(0,0.6);
+      translate(segment_average(positions.top_lip)[0], segment_average(positions.top_lip)[1] - 0.3);
       strokeWeight(0.4)
       scale(0.2);
       noFill();
       beginShape();
       curveVertex(-2,1.8);
       curveVertex(-2,1.8);
-      curveVertex(0,3);
+      curveVertex(0,segment_average(positions.bottom_lip)[1]*4);
       curveVertex(2,1.8);
       curveVertex(2,1.8);
       endShape();
@@ -155,16 +174,30 @@ function Face() {
     // this.draw_segment(positions.chin);
 
     //nose
-    // fill(100, 0, 100);
-    // stroke(100, 0, 100);
-    // this.draw_segment(positions.nose_bridge);
-    // this.draw_segment(positions.nose_tip);
 
-    let nosePosi = segment_average(positions.nose_tip);
+    let d = dist(segment_average(positions.nose_tip[0]), 0, segment_average(positions.nose_bridge[0]), 0);
+    let noseGap = 0.1 //distance that ditermines how nose will be drawn
 
-    fill(0);
-    stroke(0.3);
-    ellipse(nosePosi[0],nosePosi[1]-0.2,0.3,0.3);
+    if (d > noseGap) {
+      ellipse(segment_average(positions.nose_bridge)[0],segment_average(positions.nose_bridge)[1]-0.2,0.3,0.3);
+    } else if (d < -noseGap) {
+      ellipse(segment_average(positions.nose_tip)[0],segment_average(positions.nose_tip)[1]-0.2,0.3,0.3);
+      ellipse(segment_average(positions.nose_bridge)[0],segment_average(positions.nose_bridge)[1]-0.2,0.3,0.3);
+    } else {
+      ellipse(segment_average(positions.nose_tip)[0],segment_average(positions.nose_tip)[1]-0.2,0.3,0.3);
+    }
+
+    fill(100, 0, 100);
+    stroke(100, 0, 100);
+    this.draw_segment(positions.nose_bridge);
+    this.draw_segment(positions.nose_tip);
+
+    //let nosePosi = segment_average(positions.nose_tip);
+
+    // fill(0);
+    // stroke(0.3);
+    // ellipse(segment_average(positions.nose_tip)[0],segment_average(positions.nose_tip)[1]-0.2,0.3,0.3);
+    // ellipse(segment_average(positions.nose_bridge)[0],segment_average(positions.nose_bridge)[1]-0.2,0.3,0.3);
 
     strokeWeight(0.03);
 
@@ -245,14 +278,16 @@ function Face() {
     this.background_colour = int(map(settings[0], 0, 100, 1, 3));
     this.eye_type = int(map(settings[1], 0, 100, 1, 2));
     this.mouth_open = int(map(settings[2], 0, 100, 1, 2));
+    this.background_shape = int(map(settings[3], 0, 100, 1, 2));
   }
 
   /* get internal properties as list of numbers 0-100 */
   this.getProperties = function() {
-    let settings = new Array(3);
+    let settings = new Array(4);
     settings[0] = map(this.background_colour, 1, 3, 0, 100);
     settings[1] = map(this.eye_type, 1, 2, 0, 100);
     settings[2] = map(this.mouth_open, 1, 2, 0, 100);
+    settings[3] = map(this.background_shape, 1, 2, 0, 100);
     return settings;
   }
 }
