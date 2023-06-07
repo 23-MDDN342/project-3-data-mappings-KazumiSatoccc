@@ -7,7 +7,7 @@
 var DEBUG_MODE = false;
 
 // this can be used to set the number of sliders to show
-var NUM_SLIDERS = 5;
+var NUM_SLIDERS = 4;
 
 function segment_average(segment) {
   let sum_x = 0;
@@ -53,9 +53,9 @@ function Face() {
       stroke(yellowColour);
     }
 
-    if (this.background_shape = 1) { //zigzag
+    if (this.background_shape == 1) { //zigzag
       push();
-      translate(segment_average(positions.chin)[0],0);
+      translate(segment_average(positions.chin)[0], 0);
       strokeWeight(0.3);
       noFill();
       beginShape();
@@ -77,29 +77,25 @@ function Face() {
       curveVertex(-2 + spacing + spacing, 2);
       endShape();
       pop();
-    } else if (this.background_shape = 2){ //spiral
+    } else if (this.background_shape == 2){ //spiral
       push(); 
-      translate(segment_average(positions.chin)[0],0);
+      translate(segment_average(positions.chin)[0], 0);
       noFill();
       strokeWeight(0.3);
       beginShape();
       curveVertex(0,2);
       for (let i = 0; i < 10; i++) {
-        curveVertex(0,2-vertiSpa*i);
-        curveVertex(-0.4-horizonSpa*i,2-vertiSpa*i-vertiSpa);
-        curveVertex(0,1.2-vertiSpa*i);
-        curveVertex(0.4 +horizonSpa*i,2-vertiSpa*i-vertiSpa);
-        curveVertex(0,1.6-vertiSpa*i);
+        curveVertex(0,2 - vertiSpa*i);
+        curveVertex(-0.4 - horizonSpa*i, 2 - vertiSpa*i-vertiSpa);
+        curveVertex(0, 1.2 - vertiSpa*i);
+        curveVertex(0.4 +horizonSpa*i, 2 - vertiSpa*i - vertiSpa);
+        curveVertex(0, 1.6 - vertiSpa*i);
       }
-      curveVertex(0,-0.8);
+      curveVertex(0, -0.8);
       endShape();
       pop();
     }
     pop();
-
-    // mouth
-    // fill(this.detailColour);
-    // ellipse(segment_average(positions.bottom_lip)[0], segment_average(positions.bottom_lip)[1], 1.36, 0.25 * this.mouth_open);
 
     //mouth
     push(); //closed by default
@@ -131,11 +127,11 @@ function Face() {
       scale(0.2);
       noFill();
       beginShape();
-      curveVertex(-2,1.8);
-      curveVertex(-2,1.8);
+      curveVertex(-2, 1.8);
+      curveVertex(-2, 1.8);
       curveVertex(0,segment_average(positions.bottom_lip)[1]*4);
-      curveVertex(2,1.8);
-      curveVertex(2,1.8);
+      curveVertex(2, 1.8);
+      curveVertex(2, 1.8);
       endShape();
       pop();
     }
@@ -225,26 +221,26 @@ function Face() {
       noFill();
       strokeWeight(0.08)
       stroke(20);
-      arc(left_eye_pos[0], left_eye_pos[1],0.5,0.7,90-eyeLine,90+eyeLine,CHORD)
-      arc(right_eye_pos[0], right_eye_pos[1],0.5,0.7,90-eyeLine,90+eyeLine,CHORD)
+      arc(left_eye_pos[0], left_eye_pos[1], 0.5, 0.7, 90 - eyeLine, 90 + eyeLine,CHORD)
+      arc(right_eye_pos[0], right_eye_pos[1], 0.5, 0.7, 90 - eyeLine, 90 + eyeLine,CHORD)
       fill(0);
-      arc(left_eye_pos[0], left_eye_pos[1],0.5,0.7,90+eyeLine,90-eyeLine,CHORD)
-      arc(right_eye_pos[0], right_eye_pos[1],0.5,0.7,90+eyeLine,90-eyeLine,CHORD)
+      arc(left_eye_pos[0], left_eye_pos[1], 0.5, 0.7, 90 + eyeLine,90-eyeLine, CHORD)
+      arc(right_eye_pos[0], right_eye_pos[1],0.5, 0.7, 90 + eyeLine,90-eyeLine, CHORD)
   
       fill(20);
-      ellipse(left_eye_pos[0], left_eye_pos[1]+0.19,0.12);
-      ellipse(right_eye_pos[0], right_eye_pos[1]+0.19,0.12);
+      ellipse(left_eye_pos[0], left_eye_pos[1] + 0.19, 0.12);
+      ellipse(right_eye_pos[0], right_eye_pos[1] + 0.19, 0.12);
     }
     else {
       noFill();
       strokeWeight(0.08)
       stroke(20);
-      ellipse(left_eye_pos[0], left_eye_pos[1],0.5,0.7)
-      ellipse(right_eye_pos[0], right_eye_pos[1],0.5,0.7)
+      ellipse(left_eye_pos[0], left_eye_pos[1], 0.5, 0.7)
+      ellipse(right_eye_pos[0], right_eye_pos[1], 0.5, 0.7)
 
       fill(20);
-      ellipse(left_eye_pos[0], left_eye_pos[1]+0.1,0.12);
-      ellipse(right_eye_pos[0], right_eye_pos[1]+0.1,0.12);
+      ellipse(left_eye_pos[0], left_eye_pos[1] + 0.1, 0.12);
+      ellipse(right_eye_pos[0], right_eye_pos[1] + 0.1, 0.12);
     }
   }
 
@@ -262,7 +258,7 @@ function Face() {
 
   /* get internal properties as list of numbers 0-100 */
   this.getProperties = function() {
-    let settings = new Array(3);
+    let settings = new Array(4);
     // settings[0] = map(this.num_eyes, 1, 2, 0, 100);
     // settings[1] = map(this.rotateNose, 270, -90, 0, 100);
     // settings[2] = map(this.nose_value, 0, 10, 0, 100);
