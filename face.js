@@ -4,19 +4,11 @@
  */  
 
 // remove this or set to false to enable full program (load will be slower)
-var DEBUG_MODE = true;
+var DEBUG_MODE = false;
 
 // this can be used to set the number of sliders to show
-var NUM_SLIDERS = 3;
+var NUM_SLIDERS = 4;
 
-// other variables can be in here too
-// here's some examples for colors used
-
-
-const stroke_color = [95, 52, 8];
-
-// example of a global function
-// given a segment, this returns the average point [x, y]
 function segment_average(segment) {
   let sum_x = 0;
   let sum_y = 0;
@@ -30,17 +22,14 @@ function segment_average(segment) {
 
 // This where you define your own face object
 function Face() {
-  // these are state variables for a face
-  // (your variables should be different!)
-  this.detailColour = [204, 136, 17];
-  this.mainColour = [51, 119, 153];
-  this.num_eyes = 2;    // can be either 1 (cyclops) or 2 (two eyes)
-  this.eye_shift = -1;   // range is -10 to 10
-  this.mouth_size = 1;  // range is 0.5 to 8
+  const redColour = [255,100,100];
+  const blueColour = [100,100,255];
+  const yellowColour = [200,255,70];
 
-  this.chinColour = [153, 153, 51]
-  this.lipColour = [136, 68, 68]
-  this.eyebrowColour = [119, 85, 17]
+  this.eye_type = 1;    // type of eye 1 or 2
+  this.mouth_open = 1;  // mouth open when 1
+  this.background_colour = 1; // color of background
+  this.background_shape = 1; // shape of background
 
   /*
    * Draw the face with position lists that include:
@@ -48,106 +37,236 @@ function Face() {
    *    bottom_lip, top_lip, nose_tip, nose_bridge, 
    */  
   this.draw = function(positions) {
-    console.log()
-    // head
-    ellipseMode(CENTER);
-    stroke(stroke_color);
-    fill(this.mainColour);
-    ellipse(segment_average(positions.chin)[0], 0, 3, 4);
-    noStroke();
+    //bakcgorund
+    let dotNum = 6 //number of edges on one side of rectangle
+    let spacing = 4/dotNum //spacing for vertex lines
 
+    let horizonSpa = 0.2 //expanding the horizontal size for spiral
+    let vertiSpa = 0.4 //spacing for each spiral
+    
+    push();
+    if (this.background_colour == 1) { //colour changes
+      stroke(redColour);
+    } else if (this.background_colour == 2) {
+      stroke(blueColour);
+    } else if (this.background_colour == 3) {
+      stroke(yellowColour);
+    }
 
-    // mouth
-    fill(this.detailColour);
-    ellipse(segment_average(positions.bottom_lip)[0], segment_average(positions.bottom_lip)[1], 1.36, 0.25 * this.mouth_size);
+    if (this.background_shape == 1) { //zigzag
+      push();
+      translate(segment_average(positions.chin)[0], 0);
+      strokeWeight(0.3);
+      noFill();
+      beginShape();
+      curveVertex(-2, -2 + spacing + 0.3)
+      for (let i = 0; i < dotNum; i++) {
+    
+        curveVertex(-2, -2 + spacing*i + 0.3);
+        curveVertex(-2 + spacing + spacing*i, -2);
+      }
+      curveVertex(-2 + spacing + spacing, -2);
+      endShape();
+  
+      beginShape();
+      curveVertex(2, -2 + spacing + 0.3);
+      for (let i = 0; i < dotNum; i++) {
+        curveVertex(2, -2 + spacing*i + 0.3);
+        curveVertex(-2 + spacing + spacing*i, 2);
+      }
+      curveVertex(-2 + spacing + spacing, 2);
+      endShape();
+      pop();
+    } else if (this.background_shape == 2){ //spiral
+      push(); 
+      translate(segment_average(positions.chin)[0], 0);
+      noFill();
+      strokeWeight(0.3);
+      beginShape();
+      curveVertex(0,2);
+      for (let i = 0; i < 10; i++) {
+        curveVertex(0,2 - vertiSpa*i);
+        curveVertex(-0.4 - horizonSpa*i, 2 - vertiSpa*i-vertiSpa);
+        curveVertex(0, 1.2 - vertiSpa*i);
+        curveVertex(0.4 +horizonSpa*i, 2 - vertiSpa*i - vertiSpa);
+        curveVertex(0, 1.6 - vertiSpa*i);
+      }
+      curveVertex(0, -0.8);
+      endShape();
+      pop();
+    }
+    pop();
+
+    //mouth
+    push(); //closed by default
+    translate(segment_average(positions.top_lip)[0], segment_average(positions.top_lip)[1] - 0.3);
+    strokeWeight(0.4)
+    scale(0.2);
+    noFill();
+    beginShape();
+    curveVertex(-2,0.5);
+    curveVertex(-2,0.5);
+    curveVertex(-3,0);
+    curveVertex(-4,1);
+    curveVertex(-3,2);
+    curveVertex(-2,1.8);
+    curveVertex(0,1.5);
+    curveVertex(2,1.8);
+    curveVertex(3,2);
+    curveVertex(4,1);
+    curveVertex(3,0);
+    curveVertex(2,0.5);
+    curveVertex(2,0.5);
+    endShape();
+    pop();
+
+    if (this.mouth_open == 1) { //let mouse open when mouth_open is 1
+      push();
+      translate(segment_average(positions.top_lip)[0], segment_average(positions.top_lip)[1] - 0.3);
+      strokeWeight(0.4)
+      scale(0.2);
+      noFill();
+      beginShape();
+      curveVertex(-2, 1.8);
+      curveVertex(-2, 1.8);
+      curveVertex(0,segment_average(positions.bottom_lip)[1]*4);
+      curveVertex(2, 1.8);
+      curveVertex(2, 1.8);
+      endShape();
+      pop();
+    }
 
     // eyebrows
-    fill( this.eyebrowColour);
-    stroke( this.eyebrowColour);
+    let LEB0 = positions.left_eyebrow[0];
+    let LEB2 = positions.left_eyebrow[2];
+    let LEB4 = positions.left_eyebrow[4];
+    let REB0 = positions.right_eyebrow[0];
+    let REB2 = positions.right_eyebrow[2];
+    let REB4 = positions.right_eyebrow[4];
+
+    noFill();
     strokeWeight(0.08);
-    this.draw_segment(positions.left_eyebrow);
-    this.draw_segment(positions.right_eyebrow);
+    beginShape(); //left eyebrows
+    curveVertex(LEB0[0],LEB0[1]);
+    curveVertex(LEB0[0],LEB0[1]);
+    curveVertex(LEB2[0],LEB2[1]);
+    curveVertex(LEB4[0],LEB4[1]);
+    curveVertex(LEB4[0],LEB4[1]);
+    endShape();
 
-    // draw the chin segment using points
-    fill(this.chinColour);
-    stroke(this.chinColour);
-    this.draw_segment(positions.chin);
+    beginShape(); //right eyebrows
+    curveVertex(REB0[0],REB0[1]);
+    curveVertex(REB0[0],REB0[1]);
+    curveVertex(REB2[0],REB2[1]);
+    curveVertex(REB4[0],REB4[1]);
+    curveVertex(REB4[0],REB4[1]);
+    endShape();
 
-    fill(100, 0, 100);
-    stroke(100, 0, 100);
-    this.draw_segment(positions.nose_bridge);
-    this.draw_segment(positions.nose_tip);
+    //nose
+    let noseBegg = positions.nose_bridge[0];
+    let noseBegg2 = positions.nose_bridge[2];
+    let noseTop = positions.nose_bridge[3];
+    let noseTipMid = positions.nose_tip[2];
+    let noseEndR = positions.nose_tip[4];
+    let noseEndL = positions.nose_tip[0];
 
-    strokeWeight(0.03);
+    let d = dist(noseTipMid[0], 0, noseTop[0], 0);
+    let noseGap = map(d, 0, 1 , 0.1, 0.6);
 
-    fill(this.lipColour);
-    stroke(this.lipColour);
-    this.draw_segment(positions.top_lip);
-    this.draw_segment(positions.bottom_lip);
+    if (noseTipMid[0] < noseTop[0] - 0.05) { // the nose angle depends whick side the person facing.
+      noFill();
+      stroke(0);
+      beginShape();
+      curveVertex(noseBegg[0],noseBegg[1]);
+      curveVertex(noseBegg[0],noseBegg[1]);
+      curveVertex(noseBegg2[0],noseBegg2[1]);
+      curveVertex(noseTop[0],noseTop[1]);
+      curveVertex(noseTipMid[0],noseTipMid[1]);
+      curveVertex(noseTipMid[0]-noseGap,noseTipMid[1]-noseGap);
+      curveVertex(noseEndL[0]+0.2,noseEndL[1] - 0.4);
+      curveVertex(noseEndL[0]+0.2,noseEndL[1] - 0.4);
+      endShape();
+    } else if (noseTipMid[0] > noseTop[0] + 0.05) {
+      noFill();
+      stroke(0);
+      beginShape();
+      curveVertex(noseBegg[0],noseBegg[1]);
+      curveVertex(noseBegg[0],noseBegg[1]);
+      curveVertex(noseBegg2[0],noseBegg2[1]);
+      curveVertex(noseTop[0],noseTop[1]);
+      curveVertex(noseTipMid[0],noseTipMid[1]);
+      curveVertex(noseTipMid[0]+noseGap,noseTipMid[1]-noseGap);
+      curveVertex(noseEndR[0]-0.2,noseEndR[1] - 0.4);
+      curveVertex(noseEndR[0]-0.2,noseEndR[1] - 0.4);
+      endShape();
+    } else { // when person is facing front
+      noFill();
+      stroke(0);
+      beginShape();
+      curveVertex(noseBegg[0],noseBegg[1]);
+      curveVertex(noseBegg[0],noseBegg[1]);
+      curveVertex(noseBegg2[0],noseBegg2[1]);
+      curveVertex(noseTop[0],noseTop[1]);
+      curveVertex(noseTop[0],noseTop[1]);
+      endShape();
+    }
 
+     // eyes
     let left_eye_pos = segment_average(positions.left_eye);
     let right_eye_pos = segment_average(positions.right_eye);
 
-    // eyes
-    noStroke();
-    let curEyeShift = 0.04 * this.eye_shift;
-    if(this.num_eyes == 2) {
-      fill(this.detailColour);
-      ellipse(left_eye_pos[0], left_eye_pos[1], 0.5, 0.33);
-      ellipse(right_eye_pos[0], right_eye_pos[1], 0.5, 0.33);
-
-      // fill(this.mainColour);
-      // ellipse(left_eye_pos[0] + curEyeShift, left_eye_pos[1], 0.18);
-      // ellipse(right_eye_pos[0] + curEyeShift, right_eye_pos[1], 0.18);
+    if(this.eye_type == 2) {
+      let eyeLine = 120 //where line on eye appears 
+  
+      noFill();
+      strokeWeight(0.08)
+      stroke(20);
+      arc(left_eye_pos[0], left_eye_pos[1], 0.5, 0.7, 90 - eyeLine, 90 + eyeLine,CHORD)
+      arc(right_eye_pos[0], right_eye_pos[1], 0.5, 0.7, 90 - eyeLine, 90 + eyeLine,CHORD)
+      fill(0);
+      arc(left_eye_pos[0], left_eye_pos[1], 0.5, 0.7, 90 + eyeLine,90-eyeLine, CHORD)
+      arc(right_eye_pos[0], right_eye_pos[1],0.5, 0.7, 90 + eyeLine,90-eyeLine, CHORD)
+  
+      fill(20);
+      ellipse(left_eye_pos[0], left_eye_pos[1] + 0.19, 0.12);
+      ellipse(right_eye_pos[0], right_eye_pos[1] + 0.19, 0.12);
     }
     else {
-      let eyePosX = (left_eye_pos[0] + right_eye_pos[0]) / 2;
-      let eyePosY = (left_eye_pos[1] + right_eye_pos[1]) / 2;
+      noFill();
+      strokeWeight(0.08)
+      stroke(20);
+      ellipse(left_eye_pos[0], left_eye_pos[1], 0.5, 0.7)
+      ellipse(right_eye_pos[0], right_eye_pos[1], 0.5, 0.7)
 
-      fill(this.detailColour);
-      ellipse(eyePosX, eyePosY, 0.45, 0.27);
-
-      fill(this.mainColour);
-      ellipse(eyePosX - 0.1 + curEyeShift, eyePosY, 0.18);
+      fill(20);
+      ellipse(left_eye_pos[0], left_eye_pos[1] + 0.1, 0.12);
+      ellipse(right_eye_pos[0], right_eye_pos[1] + 0.1, 0.12);
     }
-   // fill(0)
-   //ellipse(0,0, 0.5,0.5) center point
-   //rect(-2,-2,4.5,4) sizing debug 
   }
-
-  // example of a function *inside* the face object.
-  // this draws a segment, and do_loop will connect the ends if true
-  this.draw_segment = function(segment, do_loop) {
-    for(let i=0; i<segment.length; i++) {
-        let px = segment[i][0];
-        let py = segment[i][1];
-        ellipse(px, py, 0.1);
-        if(i < segment.length - 1) {
-          let nx = segment[i+1][0];
-          let ny = segment[i+1][1];
-          line(px, py, nx, ny);
-        }
-        else if(do_loop) {
-          let nx = segment[0][0];
-          let ny = segment[0][1];
-          line(px, py, nx, ny);
-        }
-    }
-  };
 
   /* set internal properties based on list numbers 0-100 */
   this.setProperties = function(settings) {
-    this.num_eyes = int(map(settings[0], 0, 100, 1, 2));
-    this.eye_shift = map(settings[1], 0, 100, -2, 2);
-    this.mouth_size = map(settings[2], 0, 100, 0.5, 8);
+    // this.num_eyes = int(map(settings[0], 0, 100, 1, 2));
+    // this.rotateNose = map(settings[1], 0, 100, -90, 270);
+    // this.nose_value = map(settings[2], 0, 100, 0, 4);
+
+    this.background_colour = int(map(settings[0], 0, 100, 1, 3));
+    this.eye_type = int(map(settings[1], 0, 100, 1, 2));
+    this.mouth_open = int(map(settings[2], 0, 100, 1, 2));
+    this.background_shape = int(map(settings[3], 0, 100, 1, 2));
   }
 
   /* get internal properties as list of numbers 0-100 */
   this.getProperties = function() {
-    let settings = new Array(3);
-    settings[0] = map(this.num_eyes, 1, 2, 0, 100);
-    settings[1] = map(this.eye_shift, -2, 2, 0, 100);
-    settings[2] = map(this.mouth_size, 0.5, 8, 0, 100);
+    let settings = new Array(4);
+    // settings[0] = map(this.num_eyes, 1, 2, 0, 100);
+    // settings[1] = map(this.rotateNose, 270, -90, 0, 100);
+    // settings[2] = map(this.nose_value, 0, 10, 0, 100);
+
+    settings[0] = map(this.background_colour, 1, 3, 0, 100);
+    settings[1] = map(this.eye_type, 1, 2, 0, 100);
+    settings[2] = map(this.mouth_open, 1, 2, 0, 100);
+    settings[3] = map(this.background_shape, 1, 2, 0, 100);
     return settings;
   }
 }
